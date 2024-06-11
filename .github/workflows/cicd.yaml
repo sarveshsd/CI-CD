@@ -20,5 +20,27 @@ jobs:
           node-version: "17"
 
       - name: Install dependencies
-        run: npm Install
+        run: npm install
       
+      - uses: actions/upload-atifact@v4
+        with:
+          name: my-artifact
+          path: target/
+      
+      - name: Trivy-Fs scan
+        run: |
+          trivy fs --format table -o trivy-fs-report.html .
+
+      - name: SonarQube scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: SonarQube quality gate Check
+        id: sonar-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}      
