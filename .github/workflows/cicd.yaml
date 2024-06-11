@@ -57,6 +57,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_KEY: react-app
 
       - name: SonarQube quality gate Check
         id: sonar-quality-gate-check
