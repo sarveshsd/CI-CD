@@ -1,0 +1,76 @@
+name: CICD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - workflow
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with: 
+          node-version: "17"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: target/
+      
+      - name: Build Docker Image
+        run: |
+          docker build -t sarveshsd/react:latest .
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Push Docker Image
+        run: |
+          docker push sarveshsd/react:latest
+
+      - name: Trivy-Fs scan
+        run: |
+          trivy fs --format table -o trivy-fs-report.html .
+
+      - name: SonarQube scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_KEY: react-app
+
+      - name: SonarQube quality gate Check
+        id: sonar-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} 
+          SONAR_PROJECT_KEY: react-app
+
+      - name: Kubectl Action
+        uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+      - run: |
+          kubectl apply -f deployment-service.yaml -n webapps
+          kubectl get svc -n webapps
