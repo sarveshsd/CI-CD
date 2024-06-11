@@ -34,5 +34,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["lcov", "text"],
+    "coverageDirectory": "coverage",
+    "testResultsProcessor": "jest-sonar-reporter",
+    "reporters": [
+      "default",
+      ["jest-sonar-reporter", {
+        "outputDirectory": "reports",
+        "outputName": "test-report.xml"
+      }]
+    ]
+  },
+  "devDependencies": {
+    "jest-sonar-reporter": "^2.0.0"
   }
 }
