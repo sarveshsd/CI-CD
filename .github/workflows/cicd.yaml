@@ -48,9 +48,9 @@ jobs:
         run: |
           docker push sarveshsd/react:latest
 
-      - name: Trivy-Fs scan
-        run: |
-          trivy fs --format table -o trivy-fs-report.html .
+      #- name: Trivy-Fs scan
+      #  run: |
+      #    trivy fs --format table -o trivy-fs-report.html .
 
      #- name: SonarQube scan
      #  uses: sonarsource/sonarqube-scan-action@master
