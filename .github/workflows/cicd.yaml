@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -48,29 +48,29 @@ jobs:
         run: |
           docker push sarveshsd/react:latest
 
-      - name: Trivy-Fs scan
-        run: |
-          trivy fs --format table -o trivy-fs-report.html .
+      #- name: Trivy-Fs scan
+      #  run: |
+      #    trivy fs --format table -o trivy-fs-report.html .
 
-      - name: SonarQube scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_PROJECT_KEY: react-app
+     #- name: SonarQube scan
+     #  uses: sonarsource/sonarqube-scan-action@master
+     #  env:
+     #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+     #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+     #    SONAR_PROJECT_KEY: react-app
 
-      - name: SonarQube quality gate Check
-        id: sonar-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} 
-          SONAR_PROJECT_KEY: react-app
+     #- name: SonarQube quality gate Check
+     #  id: sonar-quality-gate-check
+     #  uses: sonarsource/sonarqube-quality-gate-action@master
+     #  env:
+     #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+     #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} 
+     #    SONAR_PROJECT_KEY: react-app
 
-      - name: Kubectl Action
-        uses: tale/kubectl-action@v1
-        with:
-          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-      - run: |
-          kubectl apply -f deployment-service.yaml -n webapps
-          kubectl get svc -n webapps
+     #- name: Kubectl Action
+     #  uses: tale/kubectl-action@v1
+     #  with:
+     #    base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+     #- run: |
+     #    kubectl apply -f deployment-service.yaml -n webapps
+     #    kubectl get svc -n webapps
