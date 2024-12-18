@@ -41,10 +41,7 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/index.js"
     ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "coverageReporters": ["lcov", "text"],
+    "coverageReporters": ["text", "lcov"],
     "coverageDirectory": "coverage",
     "testMatch": [
       "**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -52,14 +49,7 @@
     ],
     "transform": {
       "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
-    },
-    "reporters": [
-      "default",
-      ["jest-sonar-reporter", {
-        "outputDirectory": "reports",
-        "outputName": "test-report.xml"
-      }]
-    ]
+    }
   },
   "devDependencies": {
     "jest-sonar-reporter": "^2.0.0"
