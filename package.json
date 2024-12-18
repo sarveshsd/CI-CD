@@ -36,10 +36,23 @@
     ]
   },
   "jest": {
-    "collectCoverage": true,
+    "clearMocks": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/index.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
     "coverageReporters": ["lcov", "text"],
     "coverageDirectory": "coverage",
-    "testResultsProcessor": "jest-sonar-reporter",
+    "testMatch": [
+      "**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "**/?(*.)+(spec|test).{js,jsx,ts,tsx}"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+    },
     "reporters": [
       "default",
       ["jest-sonar-reporter", {
